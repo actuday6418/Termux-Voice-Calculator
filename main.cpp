@@ -3,6 +3,7 @@
 #include<string.h>
 #include<string>
 #include<vector>
+#include"pstream.h"
 
 std::vector<std::string> split(const std::string& i_str, const std::string& i_delim)
 {
@@ -23,37 +24,38 @@ std::vector<std::string> split(const std::string& i_str, const std::string& i_de
     return result;      
 }
 
-int main(int argc,char** argv)
+int main()
 {
 
 redi::ipstream proc("termux-speech-to-text", redi::pstreams::pstdout | redi::pstreams::pstderr);
-  std::string line;
-  // read child's stdout
-  while (std::getline(proc.out(), line))
-    std::cout << "stdout: " << line << '\n';
-if(argc != 2)
-{
-	std::cout<<"Enter a valid statement";
-	return 0;
-}
-
-std::string str(argv[1], strlen(argv[1]));
+  std::string str;
+  std::getline(proc.out(),str);
 const std::string search ="what is ";
 str.erase(0,search.length());
 std::vector<std::string> ops = split(str," ");
 std::vector<std::string>::iterator it;
 it=ops.begin();
-int opd1=std::stoi(*it);
+int opd1,opd2,ans;
+try
+{
+opd1=std::stoi(*it);
 it+=2;
-int opd2=std::stoi(*it);
+opd2=std::stoi(*it);
 it--;
-int ans;
+}
+
+catch(std::invalid_argument a)
+{
+	std::cout<<str;
+}
+	
 	if(it->compare("plus")==0)
 {
 		ans = opd1+opd2;
 		std::string message=std::string(("termux-tts-speak -s MUSIC \"the sum of the numbers is ")+std::to_string(ans)).c_str()+std::string("\"");
 system(message.c_str());
 }
+
 	
 return 0;
 }
