@@ -30,6 +30,7 @@ int main()
 redi::ipstream proc("termux-speech-to-text", redi::pstreams::pstdout | redi::pstreams::pstderr);
   std::string str;
   std::getline(proc.out(),str);
+
 const std::string search ="what is ";
 str.erase(0,search.length());
 std::vector<std::string> ops = split(str," ");
@@ -48,6 +49,7 @@ catch(std::invalid_argument a)
 {
 	std::cout<<str;
 }
+
 	
 	if(it->compare("plus")==0)
 {
@@ -55,7 +57,28 @@ catch(std::invalid_argument a)
 		std::string message=std::string(("termux-tts-speak -s MUSIC \"the sum of the numbers is ")+std::to_string(ans)).c_str()+std::string("\"");
 system(message.c_str());
 }
+if(it->compare("minus")==0)
+{
+	ans = opd1-opd2;
+                std::string message=std::string(("termux-tts-speak -s MUSIC \"the difference of the numbers is ")+std::to_string(ans)).c_str()+std::string("\"");
+system(message.c_str());
+}
+if(it->compare("times")==0)                           {
+        ans = opd1*opd2;
+                std::string message=std::string(("termux-tts-speak -s MUSIC \"the product of the numbers is ")+std::to_string(ans)).c_str()+std::string("\"");
+system(message.c_str());
+}
+if(it->compare("by")==0)                           {
+        if(opd2!=0)
+	ans = opd1/opd2;
+	else 
+	{
+		std::cout<<"Division by zero";
+	return 0;
+	}
+                std::string message=std::string(("termux-tts-speak -s MUSIC \"the quotient is ")+std::to_string(ans)).c_str()+std::string("\"");
+system(message.c_str());
+}
 
-	
 return 0;
 }
